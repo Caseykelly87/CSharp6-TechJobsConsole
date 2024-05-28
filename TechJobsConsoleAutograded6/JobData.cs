@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading.Tasks.Dataflow;
 
 namespace TechJobsConsoleAutograded6
 {
@@ -46,17 +48,27 @@ namespace TechJobsConsoleAutograded6
         {
             // load data, if not already loaded
             LoadData();
+            
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
 
-            return null;
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> kvp in job)
+                {
+                    string vSample =  kvp.Value;
+                    if ( vSample.Contains(value, StringComparison.OrdinalIgnoreCase))
+                    {        
+                        if (!jobs.Contains(job))
+                        {
+                            jobs.Add(job);
+                        }
+                    }
+                }
+
+            }
+                return jobs;    
         }
-
-        /**
-         * Returns results of search the jobs data by key/value, using
-         * inclusion of the search term.
-         *
-         * For example, searching for employer "Enterprise" will include results
-         * with "Enterprise Holdings, Inc".
-         */
+       
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
             // load data, if not already loaded
@@ -70,7 +82,7 @@ namespace TechJobsConsoleAutograded6
 
 
                 //TODO: Make search case-insensitive
-                if (aValue.Contains(value))
+                if (aValue.Contains(value, StringComparison.OrdinalIgnoreCase))
                 {
                     jobs.Add(row);
                 }

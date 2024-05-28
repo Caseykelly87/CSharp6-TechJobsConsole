@@ -1,4 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Formats.Asn1;
+using System.Linq.Expressions;
+using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace TechJobsConsoleAutograded6
 {
@@ -44,6 +51,7 @@ namespace TechJobsConsoleAutograded6
                     else
                     {
                         List<string> results = JobData.FindAll(columnChoice);
+                        results.Sort();
 
                         Console.WriteLine(Environment.NewLine + "*** All " + columnChoices[columnChoice] + " Values ***");
                         foreach (string item in results)
@@ -64,7 +72,8 @@ namespace TechJobsConsoleAutograded6
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        List<Dictionary<string, string>> jobResult = JobData.FindByValue(searchTerm);
+                        PrintJobs(jobResult);                        
                     }
                     else
                     {
@@ -108,7 +117,7 @@ namespace TechJobsConsoleAutograded6
                     Console.WriteLine(j + " - " + choices[choiceKeys[j]]);
                 }
 
-                string input = Console.ReadLine();
+                string input = Console.ReadLine()!;
                 if (input.Equals("x") || input.Equals("X"))
                 {
                     return null;
@@ -135,7 +144,23 @@ namespace TechJobsConsoleAutograded6
         // TODO: complete the PrintJobs method.
         public void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            Console.WriteLine("PrintJobs is not implemented yet");
+            if (someJobs.Count == 0)
+            {
+                Console.WriteLine("No results");                
+            }
+            
+            foreach (Dictionary<string, string> job in someJobs)
+            {
+                Console.WriteLine(Environment.NewLine + "*****");
+                
+                    foreach (KeyValuePair<string, string> jkv in job)
+                    {     
+                        Console.WriteLine(jkv.Key + ": " + jkv.Value);
+                    }
+
+                Console.WriteLine("*****");
+
+            }                    
         }
     }
 }
